@@ -5,20 +5,58 @@ public class Enemy {
 	private Game game;
 	private Handler handler;
 	private Move move;
+	private Board board;
 	
-	public Enemy(Game game, Handler handler, Move move, ID id) {
+	private int difficulty;
+	
+	private int takeOne=2;
+	private int takeTwo=4;
+	private int takeThree=8;
+	private int takeFour=16;
+	private int takeFive=32;
+	private int takeSix=64;
+	private int takeSeven=128;
+	private int takeEight=256;
+	private int takeNine=512;
+	private int takeTen=1024;
+	private int takeMoreThanEleven=2048;
+	
+	private int[][] currentStones = new int[2][8];
+	private int[][] possibleMoves = new int[2][8];
+	
+	public Enemy(Game game, Handler handler, Move move, Board board, ID id) {
 		
 		this.game = game;
 		this.handler = handler;
 		this.move = move;
+		this.board = board;
 	}
 	
 	
-	public void calculateMove() {
+	public void calculateMoves() {
 		
+		currentStones=board.getField2();
+		
+		for(int y=0; y<2; y++) {
+			for(int x=0; x<8; x++) {
+				if(currentStones[y][x]>=2) {
+				}
+			}
+		}
 	}
 	
 	public void calculatBestMove() {
 		
+		
+	}
+
+
+	
+	public int getDifficulty() {
+		return difficulty;
+	}
+	
+	public void setDifficulty(int difficulty) {
+		this.difficulty = difficulty;
 	}
 }
