@@ -2,8 +2,12 @@ package com.steinschen.main;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class Board extends GameObject{
 	
@@ -21,11 +25,27 @@ public class Board extends GameObject{
 	
 	private boolean gameOver=false;
 	
+	private BufferedImage boardImage;
+	
+	Font sharonsHand;
 	
 	public Board(int x, int y, ID id, Handler handler) {
 		super(x, y, id);
 		
 		this.handler = handler;
+		
+		SpriteSheet ss = new SpriteSheet(Game.spriteSheet);
+		
+		boardImage = ss.grabImage(5, 1, 960, 576);
+		
+		try {
+			sharonsHand = Font.createFont(Font.TRUETYPE_FONT, new File("sharonshand.ttf")).deriveFont(35f);
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("sharonshand.ttf")));
+			
+		} catch(IOException | FontFormatException e) {
+			
+		}
 		
 		for(int i=0; i<8; i++) {
 			for(int j=0; j<2; j++) {
@@ -43,89 +63,46 @@ public class Board extends GameObject{
 		
 		Font fnt = new Font("arial", 1, 15);
 		
+		g.drawImage(boardImage, 73, 100, null);
 		
 		g.setColor(Color.black);
-		g.drawRect(60, 100, 940, 560);
+		g.setFont(sharonsHand);
 		
-		g.setColor(Color.gray);
-		g.fillRect(100, 380, 860, 5);
+		g.drawString(String.valueOf(field2[0][0]), 170, 250);
+		g.drawString(String.valueOf(field2[0][1]), 276, 234);
+		g.drawString(String.valueOf(field2[0][2]), 382, 225);
+		g.drawString(String.valueOf(field2[0][3]), 487, 220);
+		g.drawString(String.valueOf(field2[0][4]), 592, 219);
+		g.drawString(String.valueOf(field2[0][5]), 690, 221);
+		g.drawString(String.valueOf(field2[0][6]), 795, 230);
+		g.drawString(String.valueOf(field2[0][7]), 895, 241);
 		
-		g.setColor(Color.gray);
-		g.drawRect(100, 140, 90, 90);
-		g.drawRect(210, 140, 90, 90);
-		g.drawRect(320, 140, 90, 90);
-		g.drawRect(430, 140, 90, 90);
-		g.drawRect(540, 140, 90, 90);
-		g.drawRect(650, 140, 90, 90);
-		g.drawRect(760, 140, 90, 90);
-		g.drawRect(870, 140, 90, 90);
+		g.drawString(String.valueOf(field2[1][0]), 162, 342);
+		g.drawString(String.valueOf(field2[1][1]), 270, 335);
+		g.drawString(String.valueOf(field2[1][2]), 380, 326);
+		g.drawString(String.valueOf(field2[1][3]), 485, 320);
+		g.drawString(String.valueOf(field2[1][4]), 594, 320);
+		g.drawString(String.valueOf(field2[1][5]), 701, 320);
+		g.drawString(String.valueOf(field2[1][6]), 799, 327);
+		g.drawString(String.valueOf(field2[1][7]), 899, 336);
 		
-		g.drawRect(100, 250, 90, 90);
-		g.drawRect(210, 250, 90, 90);
-		g.drawRect(320, 250, 90, 90);
-		g.drawRect(430, 250, 90, 90);
-		g.drawRect(540, 250, 90, 90);
-		g.drawRect(650, 250, 90, 90);
-		g.drawRect(760, 250, 90, 90);
-		g.drawRect(870, 250, 90, 90);
+		g.drawString(String.valueOf(field[1][0]), 156, 492);
+		g.drawString(String.valueOf(field[1][1]), 263, 496);
+		g.drawString(String.valueOf(field[1][2]), 370, 505);
+		g.drawString(String.valueOf(field[1][3]), 485, 505);
+		g.drawString(String.valueOf(field[1][4]), 592, 503);
+		g.drawString(String.valueOf(field[1][5]), 700, 501);
+		g.drawString(String.valueOf(field[1][6]), 806, 496);
+		g.drawString(String.valueOf(field[1][7]), 912, 485);
 		
-		g.drawRect(100, 420, 90, 90);
-		g.drawRect(210, 420, 90, 90);
-		g.drawRect(320, 420, 90, 90);
-		g.drawRect(430, 420, 90, 90);
-		g.drawRect(540, 420, 90, 90);
-		g.drawRect(650, 420, 90, 90);
-		g.drawRect(760, 420, 90, 90);
-		g.drawRect(870, 420, 90, 90);
-		
-		g.drawRect(100, 530, 90, 90);
-		g.drawRect(210, 530, 90, 90);
-		g.drawRect(320, 530, 90, 90);
-		g.drawRect(430, 530, 90, 90);
-		g.drawRect(540, 530, 90, 90);
-		g.drawRect(650, 530, 90, 90);
-		g.drawRect(760, 530, 90, 90);
-		g.drawRect(870, 530, 90, 90);
-		
-		
-		
-		g.setColor(Color.black);
-		g.setFont(fnt);
-		g.drawString(String.valueOf(field2[0][0]), 140, 130);
-		g.drawString(String.valueOf(field2[0][1]), 250, 130);
-		g.drawString(String.valueOf(field2[0][2]), 360, 130);
-		g.drawString(String.valueOf(field2[0][3]), 470, 130);
-		g.drawString(String.valueOf(field2[0][4]), 580, 130);
-		g.drawString(String.valueOf(field2[0][5]), 690, 130);
-		g.drawString(String.valueOf(field2[0][6]), 800, 130);
-		g.drawString(String.valueOf(field2[0][7]), 910, 130);
-		
-		g.drawString(String.valueOf(field2[1][0]), 140, 360);
-		g.drawString(String.valueOf(field2[1][1]), 250, 360);
-		g.drawString(String.valueOf(field2[1][2]), 360, 360);
-		g.drawString(String.valueOf(field2[1][3]), 470, 360);
-		g.drawString(String.valueOf(field2[1][4]), 580, 360);
-		g.drawString(String.valueOf(field2[1][5]), 690, 360);
-		g.drawString(String.valueOf(field2[1][6]), 800, 360);
-		g.drawString(String.valueOf(field2[1][7]), 910, 360);
-		
-		g.drawString(String.valueOf(field[1][0]), 140, 410);
-		g.drawString(String.valueOf(field[1][1]), 250, 410);
-		g.drawString(String.valueOf(field[1][2]), 360, 410);
-		g.drawString(String.valueOf(field[1][3]), 470, 410);
-		g.drawString(String.valueOf(field[1][4]), 580, 410);
-		g.drawString(String.valueOf(field[1][5]), 690, 410);
-		g.drawString(String.valueOf(field[1][6]), 800, 410);
-		g.drawString(String.valueOf(field[1][7]), 910, 410);
-		
-		g.drawString(String.valueOf(field[0][0]), 140, 640);
-		g.drawString(String.valueOf(field[0][1]), 250, 640);
-		g.drawString(String.valueOf(field[0][2]), 360, 640);
-		g.drawString(String.valueOf(field[0][3]), 470, 640);
-		g.drawString(String.valueOf(field[0][4]), 580, 640);
-		g.drawString(String.valueOf(field[0][5]), 690, 640);
-		g.drawString(String.valueOf(field[0][6]), 800, 640);
-		g.drawString(String.valueOf(field[0][7]), 910, 640);
+		g.drawString(String.valueOf(field[0][0]), 177, 582);
+		g.drawString(String.valueOf(field[0][1]), 280, 596);
+		g.drawString(String.valueOf(field[0][2]), 382, 600);
+		g.drawString(String.valueOf(field[0][3]), 480, 606);
+		g.drawString(String.valueOf(field[0][4]), 587, 608);
+		g.drawString(String.valueOf(field[0][5]), 690, 602);
+		g.drawString(String.valueOf(field[0][6]), 792, 600);
+		g.drawString(String.valueOf(field[0][7]), 889, 590);
 		
 	}
 	
