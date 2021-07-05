@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
+import org.newdawn.slick.Music;
+
 public class Game extends Canvas implements Runnable{
 	
 	private static final long serialVersionUID = 8138777044569591830L;
@@ -24,6 +26,7 @@ public class Game extends Canvas implements Runnable{
 	private AudioPlayer ap;
 	private Settings settings;
 	private End end;
+	private Menu menu;
 	
 	public enum STATE {
 		Menu,
@@ -35,7 +38,7 @@ public class Game extends Canvas implements Runnable{
 		End
 	};
 	
-	public STATE gameState = STATE.Game;
+	public STATE gameState = STATE.Settings;
 	
 	public static BufferedImage spriteSheet;
 	
@@ -44,8 +47,8 @@ public class Game extends Canvas implements Runnable{
 		BufferedImageLoader loader = new BufferedImageLoader();
 		
 		try {
-			spriteSheet = loader.loadImage("/steinchen_icon_sprite_sheet.png");
-			System.out.println("Icon Sprite Sheet loaded");
+			spriteSheet = loader.loadImage("/full_sprite_sheet_2.png");
+			System.out.println("Sprite Sheet loaded");
 		} catch (Exception e) {
 			
 			e.printStackTrace();
@@ -54,6 +57,7 @@ public class Game extends Canvas implements Runnable{
 		handler = new Handler();
 		ap = new AudioPlayer();
 		
+		menu = new Menu(this);
 		board=new Board(100, 100, ID.Board, handler);
 		spawner = new Spawner(this, handler, board);
 		move = new Move(this, board, handler, ap, mouseListener);
@@ -117,7 +121,7 @@ public class Game extends Canvas implements Runnable{
 			
 			if(System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
-				System.out.println("FPS: " + frames);
+				//System.out.println("FPS: " + frames);
 				frames = 0;
 			}
 		}
@@ -130,6 +134,8 @@ public class Game extends Canvas implements Runnable{
 		if(gameState==STATE.Restart) {
 			spawner.tick();
 		}
+		
+		if(gameState==STATE.Settings) settings.tick();
 	}
 	
 	private void render() {
@@ -145,6 +151,10 @@ public class Game extends Canvas implements Runnable{
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
 		handler.render(g);
+		
+		if(gameState==STATE.Menu) {
+			menu.render(g);
+		}
 		
 		if(gameState==STATE.Game) {
 			board.render(g);
