@@ -35,7 +35,7 @@ public class Move {
 		this.ml = ml;
 	}
 	
-	public void makeMove(int selFieldSide, int nextFieldSide, int selX, int selY, int nextX, int nextY, int currentPlayer) {
+	public boolean makeMove(int selFieldSide, int nextFieldSide, int selX, int selY, int nextX, int nextY, int currentPlayer) {
 		
 		int lastX=selX, lastY=selY;
 		int direction=1;
@@ -43,7 +43,7 @@ public class Move {
 		boolean firstMove=true;
 		int playerFieldSide=0, enemyFieldSide=0;
 		int amountTook=0;
-		
+		boolean moved=false;
 		
 		System.out.println(" | " + moves);
 		
@@ -196,8 +196,12 @@ public class Move {
 					game.gameState = STATE.End;
 					playerWon=playerFieldSide;
 				}
+				
+				moved=true;
 			}
 		}
+		
+		return moved;
 	}
 	
 	
