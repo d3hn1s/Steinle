@@ -1,0 +1,202 @@
+package com.steinschen.main;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+
+public class Board extends GameObject{
+	
+	private Handler handler;
+	
+	private Stone stone;
+	
+	private int field[][] = new int[2][8];
+	private int field2[][] = new int[2][8];
+	
+	private int amount;
+	
+	private int amountField[] = new int[8];
+	private int amountField2[] = new int[8];
+	
+	private boolean gameOver=false;
+	
+	
+	public Board(int x, int y, ID id, Handler handler) {
+		super(x, y, id);
+		
+		this.handler = handler;
+		
+		for(int i=0; i<8; i++) {
+			for(int j=0; j<2; j++) {
+				field[j][i]=2;
+				field2[j][i]=2;
+			}
+		}
+	}
+	
+	public void tick() {
+		
+	}
+	
+	public void render(Graphics g) {
+		
+		Font fnt = new Font("arial", 1, 15);
+		
+		
+		g.setColor(Color.black);
+		g.drawRect(60, 100, 940, 560);
+		
+		g.setColor(Color.gray);
+		g.fillRect(100, 380, 860, 5);
+		
+		g.setColor(Color.gray);
+		g.drawRect(100, 140, 90, 90);
+		g.drawRect(210, 140, 90, 90);
+		g.drawRect(320, 140, 90, 90);
+		g.drawRect(430, 140, 90, 90);
+		g.drawRect(540, 140, 90, 90);
+		g.drawRect(650, 140, 90, 90);
+		g.drawRect(760, 140, 90, 90);
+		g.drawRect(870, 140, 90, 90);
+		
+		g.drawRect(100, 250, 90, 90);
+		g.drawRect(210, 250, 90, 90);
+		g.drawRect(320, 250, 90, 90);
+		g.drawRect(430, 250, 90, 90);
+		g.drawRect(540, 250, 90, 90);
+		g.drawRect(650, 250, 90, 90);
+		g.drawRect(760, 250, 90, 90);
+		g.drawRect(870, 250, 90, 90);
+		
+		g.drawRect(100, 420, 90, 90);
+		g.drawRect(210, 420, 90, 90);
+		g.drawRect(320, 420, 90, 90);
+		g.drawRect(430, 420, 90, 90);
+		g.drawRect(540, 420, 90, 90);
+		g.drawRect(650, 420, 90, 90);
+		g.drawRect(760, 420, 90, 90);
+		g.drawRect(870, 420, 90, 90);
+		
+		g.drawRect(100, 530, 90, 90);
+		g.drawRect(210, 530, 90, 90);
+		g.drawRect(320, 530, 90, 90);
+		g.drawRect(430, 530, 90, 90);
+		g.drawRect(540, 530, 90, 90);
+		g.drawRect(650, 530, 90, 90);
+		g.drawRect(760, 530, 90, 90);
+		g.drawRect(870, 530, 90, 90);
+		
+		
+		
+		g.setColor(Color.black);
+		g.setFont(fnt);
+		g.drawString(String.valueOf(field2[0][0]), 140, 130);
+		g.drawString(String.valueOf(field2[0][1]), 250, 130);
+		g.drawString(String.valueOf(field2[0][2]), 360, 130);
+		g.drawString(String.valueOf(field2[0][3]), 470, 130);
+		g.drawString(String.valueOf(field2[0][4]), 580, 130);
+		g.drawString(String.valueOf(field2[0][5]), 690, 130);
+		g.drawString(String.valueOf(field2[0][6]), 800, 130);
+		g.drawString(String.valueOf(field2[0][7]), 910, 130);
+		
+		g.drawString(String.valueOf(field2[1][0]), 140, 360);
+		g.drawString(String.valueOf(field2[1][1]), 250, 360);
+		g.drawString(String.valueOf(field2[1][2]), 360, 360);
+		g.drawString(String.valueOf(field2[1][3]), 470, 360);
+		g.drawString(String.valueOf(field2[1][4]), 580, 360);
+		g.drawString(String.valueOf(field2[1][5]), 690, 360);
+		g.drawString(String.valueOf(field2[1][6]), 800, 360);
+		g.drawString(String.valueOf(field2[1][7]), 910, 360);
+		
+		g.drawString(String.valueOf(field[1][0]), 140, 410);
+		g.drawString(String.valueOf(field[1][1]), 250, 410);
+		g.drawString(String.valueOf(field[1][2]), 360, 410);
+		g.drawString(String.valueOf(field[1][3]), 470, 410);
+		g.drawString(String.valueOf(field[1][4]), 580, 410);
+		g.drawString(String.valueOf(field[1][5]), 690, 410);
+		g.drawString(String.valueOf(field[1][6]), 800, 410);
+		g.drawString(String.valueOf(field[1][7]), 910, 410);
+		
+		g.drawString(String.valueOf(field[0][0]), 140, 640);
+		g.drawString(String.valueOf(field[0][1]), 250, 640);
+		g.drawString(String.valueOf(field[0][2]), 360, 640);
+		g.drawString(String.valueOf(field[0][3]), 470, 640);
+		g.drawString(String.valueOf(field[0][4]), 580, 640);
+		g.drawString(String.valueOf(field[0][5]), 690, 640);
+		g.drawString(String.valueOf(field[0][6]), 800, 640);
+		g.drawString(String.valueOf(field[0][7]), 910, 640);
+		
+	}
+	
+	
+	public void clearBoard() {
+		
+		for(int i=0; i<8; i++) {
+			for(int j=0; j<2; j++) {
+				field[j][i]=2;
+				field2[j][i]=2;
+			}
+		}
+	}
+	
+	
+	public int[][] getField() {
+		return field;
+	}
+
+	public void setField(int[][] field) {
+		this.field = field;
+	}
+
+	public int[][] getField2() {
+		return field2;
+	}
+
+	public void setField2(int[][] field2) {
+		this.field2 = field2;
+	}
+	
+	public int getAmount(int y, int x, int fieldSide) {
+		if(fieldSide==1) {
+			amount=field[y][x];
+		}
+		if(fieldSide==2) {
+			amount=field2[y][x];
+		}
+		return amount;
+	}
+	
+	public void setAmount(int y, int x, int fieldSide, int amount) {
+		this.amount=amount;
+		if(fieldSide==1) {
+			field[y][x]=amount;
+		}
+		if(fieldSide==2) {
+			field2[y][x]=amount;
+		}
+	}
+	
+	public boolean checkForLoss(int fieldSide) {
+		
+		int amount[] = new int[8];
+		boolean loss=false;
+		
+		
+		if(fieldSide==1) {
+			for(int i=0; i<8; i++) {
+				amount[i]=field[1][i];
+			}
+		}
+		if(fieldSide==2) {
+			for(int i=0; i<8; i++) {
+				amount[i]=field2[1][i];
+			}
+		}
+		
+		if(amount[0]==0 && amount[1]==0 && amount[2]==0 && amount[3]==0 && amount[4]==0 && amount[5]==0 && amount[6]==0 && amount[7]==0) loss=true;
+		System.out.println("GAME LOST: " +loss);
+		
+		return loss;
+	}
+}

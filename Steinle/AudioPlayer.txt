@@ -1,0 +1,64 @@
+package com.steinschen.main;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.newdawn.slick.Music;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
+
+public class AudioPlayer {
+	
+	public static Map<String, Sound> soundMap = new HashMap<String, Sound>();
+	public static Map<String, Music> musicMap = new HashMap<String, Music>();
+	
+	private boolean soundMuted;
+	private boolean musicMuted;
+	private boolean dripActivated;
+
+	public static void load() {
+		
+		try {
+			soundMap.put("click", new Sound("res/mlg_hitmarker.ogg"));
+			
+			musicMap.put("drip", new Music("res/bad_piggies_drip.ogg"));
+			
+			musicMap.put("music", new Music("res/bad_piggies.ogg"));
+		} catch (SlickException e) {
+			
+			e.printStackTrace();
+		}
+	}
+	
+	public static Music getMusic(String key) {
+		return musicMap.get(key);
+	}
+	
+	public static Sound getSound(String key) {
+		return soundMap.get(key);
+	}
+	
+	public boolean getSoundMuted() {
+		return soundMuted;
+	}
+
+	public void setSoundMuted(boolean soundMuted) {
+		this.soundMuted = soundMuted;
+	}
+	
+	public boolean getMusicMuted() {
+		return musicMuted;
+	}
+
+	public void setMusicMuted(boolean musicMuted) {
+		this.musicMuted = musicMuted;
+	}
+	
+	public boolean getDripActivated() {
+		return dripActivated;
+	}
+
+	public void setDripActivated(boolean dripActivated) {
+		this.dripActivated = dripActivated;
+	}
+}

@@ -1,0 +1,49 @@
+package com.steinschen.main;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+
+public class Settings {
+	
+	private AudioPlayer ap;
+	private Game game;
+	
+	private BufferedImage box;
+	private BufferedImage boxChecked;
+	private BufferedImage back;
+	
+	public Settings(Game game, AudioPlayer ap) {
+		
+		this.game = game;
+		this.ap = ap;
+		
+		SpriteSheet ss = new SpriteSheet(Game.spriteSheet);
+		
+		box = ss.grabImage(2, 3, 32, 32);
+		boxChecked = ss.grabImage(2, 4, 32, 32);
+		back = ss.grabImage(3, 1, 32, 32);
+	}
+	
+	public void render(Graphics g) {
+		
+		Font fnt = new Font("arial", 1, 32);
+		
+		g.setFont(fnt);
+		g.setColor(Color.black);
+		g.drawString("DripCheck:", 380, 300);
+		
+		g.drawRect(370, 270, 235, 40);
+		
+		g.drawRect(390, 495, 200, 40);
+		
+		if(ap.getDripActivated()) g.drawImage(boxChecked, 570, 273, null);
+			
+		else g.drawImage(box, 570, 273, null);
+		
+		g.drawString("Back", 450, 525);
+		g.drawImage(back, 550, 500, null);
+		g.drawImage(back, 400, 500, null);
+	}
+}

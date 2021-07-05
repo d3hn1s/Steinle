@@ -1,0 +1,8 @@
+package com.steinschen.main;
+
+public enum ID {
+
+	Board(),
+	Stone(),
+	Enemy();
+}

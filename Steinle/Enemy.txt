@@ -1,0 +1,24 @@
+package com.steinschen.main;
+
+public class Enemy {
+
+	private Game game;
+	private Handler handler;
+	private Move move;
+	
+	public Enemy(Game game, Handler handler, Move move, ID id) {
+		
+		this.game = game;
+		this.handler = handler;
+		this.move = move;
+	}
+	
+	
+	public void calculateMove() {
+		
+	}
+	
+	public void calculatBestMove() {
+		
+	}
+}

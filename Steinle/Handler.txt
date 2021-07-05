@@ -1,0 +1,65 @@
+package com.steinschen.main;
+
+import java.awt.Graphics;
+import java.util.LinkedList;
+
+public class Handler {
+
+	LinkedList<GameObject> object = new LinkedList<GameObject>();
+	
+	private int currentPlayer, nextPlayer;
+	
+	public void tick() {
+		for(int i=0; i < object.size(); i++) {
+			GameObject tempObject = object.get(i);
+			
+			tempObject.tick();
+		}
+	}
+	
+	public void render(Graphics g) {
+		for(int i=0; i < object.size(); i++) {
+			GameObject tempObject = object.get(i);
+			
+			tempObject.render(g);
+		}
+	}
+	
+	public void clearAll() {
+		for(int i=0; i < object.size(); i++) {
+			object.clear();
+		}
+	}
+	
+	public void clearBoard() {
+		for(int i=0; i < object.size(); i++) {
+			GameObject tempObject = object.get(i);
+			
+			if(tempObject.id==ID.Board) object.clear();
+		}
+	}
+	
+	public void addObject(GameObject object) {
+		this.object.add(object);
+	}
+	
+	public void removeObject(GameObject object) {
+		this.object.remove(object);
+	}
+	
+	public void setCurrentPlayer(int currentPlayer) {
+		this.currentPlayer = currentPlayer;
+	}
+	
+	public int getCurrentPlayer() {
+		return currentPlayer;
+	}
+	
+	public void setNextPlayer(int nextPlayer) {
+		this.nextPlayer = nextPlayer;
+	}
+	
+	public int getNextPlayer() {
+		return nextPlayer;
+	}
+}

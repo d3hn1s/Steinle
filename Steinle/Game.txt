@@ -1,0 +1,180 @@
+package com.steinschen.main;
+
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+
+public class Game extends Canvas implements Runnable{
+	
+	private static final long serialVersionUID = 8138777044569591830L;
+
+	public static final int WIDTH = 1080, HEIGHT = WIDTH / 12 * 9;
+	
+	private Thread thread;
+	private boolean running = false;
+	
+	private Handler handler;
+	private Board board;
+	private MouseListener mouseListener;
+	private Spawner spawner;
+	private Move move;
+	private HUD hud;
+	private AudioPlayer ap;
+	private Settings settings;
+	private End end;
+	
+	public enum STATE {
+		Menu,
+		Settings,
+		Game,
+		Muted,
+		GameOver,
+		Restart,
+		End
+	};
+	
+	public STATE gameState = STATE.Game;
+	
+	public static BufferedImage spriteSheet;
+	
+	public Game() {
+		
+		BufferedImageLoader loader = new BufferedImageLoader();
+		
+		try {
+			spriteSheet = loader.loadImage("/steinchen_icon_sprite_sheet.png");
+			System.out.println("Icon Sprite Sheet loaded");
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		handler = new Handler();
+		ap = new AudioPlayer();
+		
+		board=new Board(100, 100, ID.Board, handler);
+		spawner = new Spawner(this, handler, board);
+		move = new Move(this, board, handler, ap, mouseListener);
+		mouseListener = new MouseListener(this, move, handler, ap);
+		hud = new HUD(this, handler, ap, mouseListener);
+		this.addMouseListener(mouseListener);
+		end = new End(this, move);
+		settings = new Settings(this, ap);
+		
+		AudioPlayer.load();
+		
+		AudioPlayer.getMusic("music").loop();
+		
+		new Window(WIDTH, HEIGHT, "Das Spiel der Bongoneger", this);
+		
+		
+		if(gameState==STATE.Game) {
+			handler.addObject(new Board(100, 100, ID.Board, handler));
+		}
+		
+		if(gameState==STATE.Restart) {
+			board.clearBoard();
+			handler.addObject(new Board(100, 100, ID.Board, handler));
+		}
+	}
+	
+	public synchronized void start() {
+		thread = new Thread(this);
+		thread.start();
+		running = true;
+	}
+	
+	public synchronized void stop() {
+		try {
+			thread.join();
+			running = false;
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void run() {
+		this.requestFocus();
+		long lastTime = System.nanoTime();
+		double amountOfTicks = 60.0;
+		double ns = 1000000000 / amountOfTicks;
+		double delta = 0;
+		long timer= System.currentTimeMillis();
+		int frames = 0;
+		while(running) {
+			long now = System.nanoTime();
+			delta += (now - lastTime) / ns;
+			lastTime = now;
+			while(delta >= 1) {
+				tick();
+				delta--;
+			}
+			if(running)
+				render();
+			frames++;
+			
+			if(System.currentTimeMillis() - timer > 1000) {
+				timer += 1000;
+				System.out.println("FPS: " + frames);
+				frames = 0;
+			}
+		}
+		stop();
+	}
+	
+	private void tick() {
+		handler.tick();
+		
+		if(gameState==STATE.Restart) {
+			spawner.tick();
+		}
+	}
+	
+	private void render() {
+		BufferStrategy bs = this.getBufferStrategy();
+		if(bs == null) {
+			this.createBufferStrategy(3);
+			return;
+		}
+		
+		Graphics g = bs.getDrawGraphics();
+		
+		g.setColor(Color.WHITE);
+		g.fillRect(0, 0, WIDTH, HEIGHT);
+		
+		handler.render(g);
+		
+		if(gameState==STATE.Game) {
+			board.render(g);
+			hud.render(g);
+		}
+		
+		if(gameState==STATE.Settings) {
+			handler.clearBoard();
+			settings.render(g);
+		}
+		
+		if(gameState==STATE.End) {
+			end.render(g);
+		}
+		
+		g.dispose();
+		bs.show();
+	}
+
+	public static float clamp(float var, float min, float max) {
+		if(var >= max)
+			return var = max;
+		else if(var <= min)
+			return var = min;
+		else
+			return var;
+	}
+	
+	public static void main(String args[]) {
+		new Game();
+	}
+	
+}

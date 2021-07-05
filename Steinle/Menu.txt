@@ -1,0 +1,5 @@
+package com.steinschen.main;
+
+public class Menu {
+
+}

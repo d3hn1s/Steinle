@@ -1,0 +1,607 @@
+package com.steinschen.main;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Random;
+
+import com.steinschen.main.Game.STATE;
+
+public class MouseListener extends MouseAdapter{
+	
+	private Game game;
+	private Move move;
+	private Handler handler;
+	private AudioPlayer ap;
+	private Random r = new Random();
+	
+	private int selX, selY;
+	private int nextX, nextY;
+	private int selFieldSide, nextFieldSide;
+	
+	
+
+	public MouseListener(Game game, Move move, Handler handler, AudioPlayer ap) {
+		this.game = game;
+		this.move=move;
+		this.handler=handler;
+		this.ap = ap;
+		
+		if(handler.getCurrentPlayer()==0) {
+			handler.setCurrentPlayer(r.nextInt(2)+1);
+			handler.setNextPlayer(handler.getCurrentPlayer());
+			System.out.println("CURRENT PLAYER: " +handler.getCurrentPlayer());
+		}
+	}
+	
+	public void mousePressed(MouseEvent e) {
+		int mx = e.getX();
+		int my = e.getY();
+		
+		System.out.println("");
+		System.out.println("mX:" +mx+ " | mY:" +my);
+		System.out.println("");
+		
+		if(game.gameState==STATE.Game) {
+		
+			if(mouseOver(mx, my, 30, 30, 32, 32)) {
+				System.out.println("SETTINGS");
+				game.gameState=STATE.Settings;
+				if(!ap.getSoundMuted()) AudioPlayer.getSound("click").play();
+			}
+			
+			if(mouseOver(mx, my, 90, 30, 32, 32)) {
+					System.out.println("RESTART");
+					game.gameState=STATE.Restart;
+					if(!ap.getSoundMuted()) AudioPlayer.getSound("click").play();
+			}
+			
+			if(mouseOver(mx, my, 980, 30, 32, 32)) {
+				if(ap.getMusicMuted()) {
+					System.out.println("MUSIC UNMUTED");
+					ap.setMusicMuted(false);
+					if(ap.getDripActivated()) AudioPlayer.getMusic("drip").loop();
+					else AudioPlayer.getMusic("music").loop();
+				}
+				else {
+					System.out.println("MUSIC MUTED");
+					ap.setMusicMuted(true);
+					AudioPlayer.getMusic("music").stop();
+					AudioPlayer.getMusic("drip").stop();
+				}
+				
+				if(!ap.getSoundMuted()) AudioPlayer.getSound("click").play();
+			}
+			
+			if(mouseOver(mx, my, 925, 30, 32, 32)) {
+				if(ap.getSoundMuted()) {
+					System.out.println("SOUND UNMUTED");
+					ap.setSoundMuted(false);
+				}
+				else {
+					System.out.println("SOUND MUTED");
+					ap.setSoundMuted(true);
+				}
+				
+				if(!ap.getSoundMuted()) AudioPlayer.getSound("click").play();
+			}
+			
+			if(mouseOver(mx, my, 100, 140, 90, 90)) {
+				System.out.println("2: [0][0]");
+				selX=0;
+				selY=0;
+				selFieldSide=2;
+			}
+			
+			if(mouseOver(mx, my, 210, 140, 90, 90)) {
+				System.out.println("2: [0][1]");
+				selX=1;
+				selY=0;
+				selFieldSide=2;
+			}
+			
+			if(mouseOver(mx, my, 320, 140, 90, 90)) {
+				System.out.println("2: [0][2]");
+				selX=2;
+				selY=0;
+				selFieldSide=2;
+			}
+			
+			if(mouseOver(mx, my, 430, 140, 90, 90)) {
+				System.out.println("2: [0][3]");
+				selX=3;
+				selY=0;
+				selFieldSide=2;
+			}
+			
+			if(mouseOver(mx, my, 540, 140, 90, 90)) {
+				System.out.println("2: [0][4]");
+				selX=4;
+				selY=0;
+				selFieldSide=2;
+			}
+			
+			if(mouseOver(mx, my, 650, 140, 90, 90)) {
+				System.out.println("2: [0][5]");
+				selX=5;
+				selY=0;
+				selFieldSide=2;
+			}
+			
+			if(mouseOver(mx, my, 760, 140, 90, 90)) {
+				System.out.println("2: [0][6]");
+				selX=6;
+				selY=0;
+				selFieldSide=2;
+			}
+			
+			if(mouseOver(mx, my, 870, 140, 90, 90)) {
+				System.out.println("2: [0][7]");
+				selX=7;
+				selY=0;
+				selFieldSide=2;
+			}
+			
+			if(mouseOver(mx, my, 100, 250, 90, 90)) {
+				System.out.println("2: [1][0]");
+				selX=0;
+				selY=1;
+				selFieldSide=2;
+			}
+			
+			if(mouseOver(mx, my, 210, 250, 90, 90)) {
+				System.out.println("2: [1][1]");
+				selX=1;
+				selY=1;
+				selFieldSide=2;
+			}
+			
+			if(mouseOver(mx, my, 320, 250, 90, 90)) {
+				System.out.println("2: [1][2]");
+				selX=2;
+				selY=1;
+				selFieldSide=2;
+			}
+			
+			if(mouseOver(mx, my, 430, 250, 90, 90)) {
+				System.out.println("2: [1][3]");
+				selX=3;
+				selY=1;
+				selFieldSide=2;
+			}
+			
+			if(mouseOver(mx, my, 540, 250, 90, 90)) {
+				System.out.println("2: [1][4]");
+				selX=4;
+				selY=1;
+				selFieldSide=2;
+			}
+			
+			if(mouseOver(mx, my, 650, 250, 90, 90)) {
+				System.out.println("2: [1][5]");
+				selX=5;
+				selY=1;
+				selFieldSide=2;
+			}
+			
+			if(mouseOver(mx, my, 760, 250, 90, 90)) {
+				System.out.println("2: [1][6]");	
+				selX=6;
+				selY=1;
+				selFieldSide=2;
+			}
+			
+			if(mouseOver(mx, my, 870, 250, 90, 90)) {
+				System.out.println("2: [1][7]");	
+				selX=7;
+				selY=1;
+				selFieldSide=2;
+			}
+			
+			if(mouseOver(mx, my, 100, 420, 90, 90)) {
+				System.out.println("1: [1][0]");
+				selX=0;
+				selY=1;
+				selFieldSide=1;
+			}
+			
+			if(mouseOver(mx, my, 210, 420, 90, 90)) {
+				System.out.println("1: [1][1]");
+				selX=1;
+				selY=1;
+				selFieldSide=1;
+			}
+			
+			if(mouseOver(mx, my, 320, 420, 90, 90)) {
+				System.out.println("1: [1][2]");
+				selX=2;
+				selY=1;
+				selFieldSide=1;
+			}
+			
+			if(mouseOver(mx, my, 430, 420, 90, 90)) {
+				System.out.println("1: [1][3]");
+				selX=3;
+				selY=1;
+				selFieldSide=1;
+			}
+			
+			if(mouseOver(mx, my, 540, 420, 90, 90)) {
+				System.out.println("1: [1][4]");
+				selX=4;
+				selY=1;
+				selFieldSide=1;
+			}
+			
+			if(mouseOver(mx, my, 650, 420, 90, 90)) {
+				System.out.println("1: [1][5]");
+				selX=5;
+				selY=1;
+				selFieldSide=1;
+			}
+			
+			if(mouseOver(mx, my, 760, 420, 90, 90)) {
+				System.out.println("1: [1][6]");
+				selX=6;
+				selY=1;
+				selFieldSide=1;
+			}
+			
+			if(mouseOver(mx, my, 870, 420, 90, 90)) {
+				System.out.println("1: [1][7]");
+				selX=7;
+				selY=1;
+				selFieldSide=1;
+			}
+			
+			if(mouseOver(mx, my, 100, 530, 90, 90)) {
+				System.out.println("1: [0][0]");
+				selX=0;
+				selY=0;
+				selFieldSide=1;
+			}
+			
+			if(mouseOver(mx, my, 210, 530, 90, 90)) {
+				System.out.println("1: [0][1]");
+				selX=1;
+				selY=0;
+				selFieldSide=1;
+			}
+			
+			if(mouseOver(mx, my, 320, 530, 90, 90)) {
+				System.out.println("1: [0][2]");
+				selX=2;
+				selY=0;
+				selFieldSide=1;
+			}
+			
+			if(mouseOver(mx, my, 430, 530, 90, 90)) {
+				System.out.println("1: [0][3]");
+				selX=3;
+				selY=0;
+				selFieldSide=1;
+			}
+			
+			if(mouseOver(mx, my, 540, 530, 90, 90)) {
+				System.out.println("1: [0][4]");
+				selX=4;
+				selY=0;
+				selFieldSide=1;
+			}
+			
+			if(mouseOver(mx, my, 650, 530, 90, 90)) {
+				System.out.println("1: [0][5]");
+				selX=5;
+				selY=0;
+				selFieldSide=1;
+			}
+			
+			if(mouseOver(mx, my, 760, 530, 90, 90)) {
+				System.out.println("1: [0][6]");
+				selX=6;
+				selY=0;
+				selFieldSide=1;
+			}
+			
+			if(mouseOver(mx, my, 870, 530, 90, 90)) {
+				System.out.println("1: [0][7]");
+				selX=7;
+				selY=0;
+				selFieldSide=1;
+				
+			}
+		}
+		
+		if(game.gameState==STATE.Settings) {
+			
+			if(my<=310) {
+				if(mouseOver(mx, my, 370, 270, 235, 40)) {
+					if(ap.getDripActivated()) {
+						ap.setDripActivated(false);
+						if(!ap.getMusicMuted()) AudioPlayer.getMusic("music").loop();
+					}
+					else if(!ap.getDripActivated()) {
+						ap.setDripActivated(true);
+						if(!ap.getMusicMuted()) AudioPlayer.getMusic("drip").loop();
+					}
+				}
+			}
+		
+			if(my<=535) {
+				if(mouseOver(mx, my, 390, 495, 200, 40)) {
+					System.out.println("BACK");
+					game.gameState=STATE.Game;
+				}
+			}
+		}
+		
+		if(game.gameState==STATE.End) {
+			if(mouseOver(mx, my, 0, 0, game.getWidth(), game.getHeight())) {
+				game.gameState=STATE.Restart;
+			}
+		}
+		
+	}
+	
+	public void mouseReleased(MouseEvent e) {
+		int mx = e.getX();
+		int my = e.getY();
+		
+		handler.setCurrentPlayer(handler.getNextPlayer());
+		
+		if(game.gameState==STATE.Game) {
+			
+			if(handler.getCurrentPlayer()==2) {
+				
+				if(mouseOver(mx, my, 100, 140, 90, 90)) {
+					System.out.println("2: [0][0]");
+					nextX=0;
+					nextY=0;
+					nextFieldSide=2;
+				}
+				
+				if(mouseOver(mx, my, 210, 140, 90, 90)) {
+					System.out.println("2: [0][1]");
+					nextX=1;
+					nextY=0;
+					nextFieldSide=2;
+				}
+				
+				if(mouseOver(mx, my, 320, 140, 90, 90)) {
+					System.out.println("2: [0][2]");
+					nextX=2;
+					nextY=0;
+					nextFieldSide=2;
+				}
+				
+				if(mouseOver(mx, my, 430, 140, 90, 90)) {
+					System.out.println("2: [0][3]");
+					nextX=3;
+					nextY=0;
+					nextFieldSide=2;
+				}
+				
+				if(mouseOver(mx, my, 540, 140, 90, 90)) {
+					System.out.println("2: [0][4]");
+					nextX=4;
+					nextY=0;
+					nextFieldSide=2;
+				}
+				
+				if(mouseOver(mx, my, 650, 140, 90, 90)) {
+					System.out.println("2: [0][5]");
+					nextX=5;
+					nextY=0;
+					nextFieldSide=2;
+				}
+				
+				if(mouseOver(mx, my, 760, 140, 90, 90)) {
+					System.out.println("2: [0][6]");
+					nextX=6;
+					nextY=0;
+					nextFieldSide=2;
+				}
+				
+				if(mouseOver(mx, my, 870, 140, 90, 90)) {
+					System.out.println("2: [0][7]");
+					nextX=7;
+					nextY=0;
+					nextFieldSide=2;
+				}
+				
+				if(mouseOver(mx, my, 100, 250, 90, 90)) {
+					System.out.println("2: [1][0]");
+					nextX=0;
+					nextY=1;
+					nextFieldSide=2;
+				}
+				
+				if(mouseOver(mx, my, 210, 250, 90, 90)) {
+					System.out.println("2: [1][1]");
+					nextX=1;
+					nextY=1;
+					nextFieldSide=2;
+				}
+				
+				if(mouseOver(mx, my, 320, 250, 90, 90)) {
+					System.out.println("2: [1][2]");
+					nextX=2;
+					nextY=1;
+					nextFieldSide=2;
+				}
+				
+				if(mouseOver(mx, my, 430, 250, 90, 90)) {
+					System.out.println("2: [1][3]");
+					nextX=3;
+					nextY=1;
+					nextFieldSide=2;
+				}
+				
+				if(mouseOver(mx, my, 540, 250, 90, 90)) {
+					System.out.println("2: [1][4]");
+					nextX=4;
+					nextY=1;
+					nextFieldSide=2;
+				}
+				
+				if(mouseOver(mx, my, 650, 250, 90, 90)) {
+					System.out.println("2: [1][5]");
+					nextX=5;
+					nextY=1;
+					nextFieldSide=2;
+				}
+				
+				if(mouseOver(mx, my, 760, 250, 90, 90)) {
+					System.out.println("2: [1][6]");
+					nextX=6;
+					nextY=1;
+					nextFieldSide=2;
+				}
+				
+				if(mouseOver(mx, my, 870, 250, 90, 90)) {
+					System.out.println("2: [1][7]");
+					nextX=7;
+					nextY=1;
+					nextFieldSide=2;
+				}
+				
+				if(nextFieldSide==2) handler.setNextPlayer(1);
+			}
+		
+			
+			
+			if(handler.getCurrentPlayer()==1) {
+				if(mouseOver(mx, my, 100, 420, 90, 90)) {
+					System.out.println("1: [1][0]");
+					nextX=0;
+					nextY=1;
+					nextFieldSide=1;
+				}
+				
+				if(mouseOver(mx, my, 210, 420, 90, 90)) {
+					System.out.println("1: [1][1]");
+					nextX=1;
+					nextY=1;
+					nextFieldSide=1;
+				}
+				
+				if(mouseOver(mx, my, 320, 420, 90, 90)) {
+					System.out.println("1: [1][2]");
+					nextX=2;
+					nextY=1;
+					nextFieldSide=1;
+				}
+				
+				if(mouseOver(mx, my, 430, 420, 90, 90)) {
+					System.out.println("1: [1][3]");
+					nextX=3;
+					nextY=1;
+					nextFieldSide=1;
+				}
+				
+				if(mouseOver(mx, my, 540, 420, 90, 90)) {
+					System.out.println("1: [1][4]");
+					nextX=4;
+					nextY=1;
+					nextFieldSide=1;
+				}
+				
+				if(mouseOver(mx, my, 650, 420, 90, 90)) {
+					System.out.println("1: [1][5]");
+					nextX=5;
+					nextY=1;
+					nextFieldSide=1;
+				}
+				
+				if(mouseOver(mx, my, 760, 420, 90, 90)) {
+					System.out.println("1: [1][6]");
+					nextX=6;
+					nextY=1;
+					nextFieldSide=1;
+				}
+				
+				if(mouseOver(mx, my, 870, 420, 90, 90)) {
+					System.out.println("1: [1][7]");
+					nextX=7;
+					nextY=1;
+					nextFieldSide=1;
+				}
+				
+				if(mouseOver(mx, my, 100, 530, 90, 90)) {
+					System.out.println("1: [0][0]");
+					nextX=0;
+					nextY=0;
+					nextFieldSide=1;
+				}
+				
+				if(mouseOver(mx, my, 210, 530, 90, 90)) {
+					System.out.println("1: [0][1]");
+					nextX=1;
+					nextY=0;
+					nextFieldSide=1;
+				}
+				
+				if(mouseOver(mx, my, 320, 530, 90, 90)) {
+					System.out.println("1: [0][2]");
+					nextX=2;
+					nextY=0;
+					nextFieldSide=1;
+				}
+				
+				if(mouseOver(mx, my, 430, 530, 90, 90)) {
+					System.out.println("1: [0][3]");
+					nextX=3;
+					nextY=0;
+					nextFieldSide=1;
+				}
+				
+				if(mouseOver(mx, my, 540, 530, 90, 90)) {
+					System.out.println("1: [0][4]");
+					nextX=4;
+					nextY=0;
+					nextFieldSide=1;
+				}
+				
+				if(mouseOver(mx, my, 650, 530, 90, 90)) {
+					System.out.println("1: [0][5]");
+					nextX=5;
+					nextY=0;
+					nextFieldSide=1;
+				}
+				
+				if(mouseOver(mx, my, 760, 530, 90, 90)) {
+					System.out.println("1: [0][6]");
+					nextX=6;
+					nextY=0;
+					nextFieldSide=1;
+				}
+				
+				if(mouseOver(mx, my, 870, 530, 90, 90)) {
+					System.out.println("1: [0][7]");
+					nextX=7;
+					nextY=0;
+					nextFieldSide=1;
+				}
+				
+				if(nextFieldSide==1) handler.setNextPlayer(2);
+			}
+			
+			
+			System.out.print("Field:" +selFieldSide + ">" + nextFieldSide +" | X:" +  selX +" Y:" +  selY +" | nX:" +  nextX +" nY:" +  nextY);
+			move.makeMove(selFieldSide, nextFieldSide, selX, selY, nextX, nextY, handler.getCurrentPlayer());
+			selX=0;
+			selY=0;
+			selFieldSide=0;
+			nextX=0;
+			nextY=0;
+			nextFieldSide=0;
+		}
+	}
+	
+	private boolean mouseOver(int mx, int my, int x, int y, int width, int height) {
+		if(mx > x && mx < x + width) {
+			if(my > y && my < y + width) {
+				return true;
+			}else return false;
+		}else return false;
+	}	
+}

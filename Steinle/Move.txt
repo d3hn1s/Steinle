@@ -1,0 +1,323 @@
+package com.steinschen.main;
+
+import java.awt.Graphics;
+
+import com.steinschen.main.Game.STATE;
+
+public class Move {
+
+	private Game game;
+	private Board board;
+	private Handler handler;
+	private AudioPlayer ap;
+	private MouseListener ml;
+	
+	private int selX, selY;
+	private int selX2, selY2;
+	
+	private int nextX, nextY;
+	private int nextX2, nextY2;
+	
+	private int fieldSide;
+	
+	private int moves;
+	
+	private int playerWon=0;
+
+	Graphics g;
+
+	public Move(Game game, Board board, Handler handler, AudioPlayer ap, MouseListener ml){
+	
+		this.game=game;
+		this.board=board;
+		this.handler=handler;
+		this.ap = ap;
+		this.ml = ml;
+	}
+	
+	public void makeMove(int selFieldSide, int nextFieldSide, int selX, int selY, int nextX, int nextY, int currentPlayer) {
+		
+		int lastX=selX, lastY=selY;
+		int direction=1;
+		boolean moving=true;
+		boolean firstMove=true;
+		int playerFieldSide=0, enemyFieldSide=0;
+		int amountTook=0;
+		
+		
+		System.out.println(" | " + moves);
+		
+		if(checkMove(selFieldSide, nextFieldSide, selX, selY, nextX, nextY) && (currentPlayer==selFieldSide)) {
+			
+			if(!ap.getSoundMuted()) AudioPlayer.getSound("click").play();
+			
+			if(selFieldSide == 1) {
+				playerFieldSide = 1;
+				enemyFieldSide = 2;
+			}
+			if(selFieldSide == 2) {
+				playerFieldSide = 2;
+				enemyFieldSide = 1;
+			}
+			
+			moves=board.getAmount(selY, selX, selFieldSide);
+			
+			System.out.println("Initial Moves:" +moves+ " | X:" +selX+ " Y:"+selY);
+			
+			while(moving) {
+				
+				System.out.println("LastX:" +lastX+ " SelY:"+selY);
+				board.setAmount(selY, lastX, selFieldSide, 0);
+				
+				for(int i=0; i<moves; i++) {
+					
+					if(nextX>lastX) {
+						direction=1;
+					}
+					if(nextX<lastX) {
+						direction=-1;
+					}
+					
+					lastX=nextX;
+					nextX++;
+					
+					System.out.println("");
+					System.out.println("Dir: "+direction);
+					
+					if(firstMove) {
+						lastX=selX+(1*direction);
+						nextX=lastX+(1*direction);
+						firstMove=false;
+						System.out.println("FirstMove");
+					}
+					else{
+						nextX=lastX+(1*direction);
+					}
+					
+					System.out.println("");
+					
+					System.out.print("LastX: "+lastX);
+					System.out.println(" | LastY: "+lastY);
+					
+					System.out.print("NextX: "+nextX);
+					System.out.println(" | NextY: "+nextY);
+					
+					System.out.print("SelX: "+selX);
+					System.out.println(" | SelY: "+selY);
+					
+					if((lastX==-1 && nextX==-2 && selX==0 && lastY==0 && nextY==0 && selY==0) || (lastX==1 && nextX==2 && selX==0 && lastY==0 && nextY==1 && selY==0)) {							//UP LEFT
+						System.out.println("				Case: " + 1);
+						nextX=1;
+						nextY=1;
+						lastX=0;
+						lastY=0;
+						selY=1;
+						direction=1;
+					}
+					else if((lastX==-1 && nextX==-2 && selX==-1 && lastY==1 && nextY==1 && selY==1) || (lastX==1 && nextX==2 && selX==0 && lastY==1 && nextY==0 && selY==1)) {				//DOWN LEFT
+						System.out.println("				Case: " + 2);
+						nextX=1;
+						nextY=0;
+						lastX=0;
+						lastY=1;
+						selY=0;
+						direction=1;						
+					}
+					else if((lastX==8 && nextX==9 && selX==6 && lastY==0 && nextY==0 && selY==0) || (lastX==8 && nextX==9 && selX==7 && lastY==0 && nextY==1 && selY==0)) {						//UP RIGHT
+						System.out.println("				Case: " + 3);
+						nextX=6;
+						nextY=1;
+						lastX=7;
+						selY=1;
+						direction=-1;
+					}
+					else if((lastX==8 && nextX==9 && selX==6 && lastY==1 && nextY==1 && selY==1) || (lastX==8 && nextX==9 && selX==7 && lastY==1 && nextY==0 && selY==1)) {			//DOWN RIGHT
+						System.out.println("				Case: " + 4);
+						nextX=6;
+						nextY=0;
+						lastX=7;
+						selY=0;
+						direction=-1;
+					}
+					
+					board.setAmount(selY, lastX, selFieldSide, board.getAmount(selY, lastX, selFieldSide)+1);
+					
+					System.out.println("									LastX:" + lastX + " | SelY:" + selY);
+					System.out.println("");
+					
+					selX=lastX-1;
+					lastY=selY;
+					selY=nextY;
+					
+					if(selX==-1 && selY==0) {
+						selX=0;
+					}
+					
+					
+					System.out.print("LastX: "+lastX);
+					System.out.println(" | LastY: "+lastY);
+					
+					System.out.print("NextX: "+nextX);
+					System.out.println(" | NextY: "+nextY);
+					
+					System.out.print("SelX: "+selX);
+					System.out.println(" | SelY: "+selY);
+					
+					handler.clearAll();
+					
+					
+				}
+				
+				System.out.println("SelX:" +selX+ " SelY:" +selY);
+				
+				
+				amountTook=board.getAmount(selY, lastX, selFieldSide);
+				takeFromEnemy(playerFieldSide, enemyFieldSide, lastX, selY);
+				amountTook=(board.getAmount(selY, lastX, selFieldSide)-amountTook);
+				moves=board.getAmount(selY, lastX, selFieldSide);
+				
+				System.out.println("");
+				System.out.println("																						Amount Took:" + amountTook);
+				System.out.println("");
+				System.out.println("Move succesful");
+				System.out.println("");
+				System.out.println("Moves: " + moves);
+				System.out.println("");
+				System.out.println("-----------------------------------------------------------------------------------------------------");
+				System.out.println("");
+				
+				if(moves<2) {
+					moving=false;
+					if(currentPlayer==2)handler.setCurrentPlayer(enemyFieldSide);
+					if(currentPlayer==1)handler.setCurrentPlayer(enemyFieldSide);
+				}
+				
+				if(board.checkForLoss(enemyFieldSide)) {
+					game.gameState = STATE.End;
+					playerWon=playerFieldSide;
+				}
+			}
+		}
+	}
+	
+	
+	public boolean checkMove(int selFieldSide, int nextFieldSide, int selX, int selY, int nextX, int nextY) {
+		
+		boolean moveLegal=false;
+		
+		if(board.getAmount(selY, selX, selFieldSide)>1) {
+		
+			if(selFieldSide==nextFieldSide && selFieldSide>0 && nextFieldSide>0) {
+				
+				if(((nextX==selX+1 || nextX==selX-1) && selY==nextY)) {
+					moveLegal=true;
+				}
+	
+				if((((selX==0 && nextX==0) || (selX==7 && nextX==7)) && (selX == nextX)) && ((nextY==0 && selY > nextY) || (nextY==1 && nextY > selY))) {
+					moveLegal=true;
+				}
+			}
+			
+		}
+		
+		
+		System.out.println(" | " + moveLegal);
+		return moveLegal;
+	}
+	
+	
+	public void takeFromEnemy(int playerFieldSide, int enemyFieldSide, int x, int y) {
+		
+		int amount=0;
+		int ownAmount=0;
+		amount=board.getAmount(y, x, enemyFieldSide);
+		ownAmount=board.getAmount(y, x, playerFieldSide);
+			
+		if(amount>0 && ownAmount>1 && y==1) {
+			board.setAmount(y, x, enemyFieldSide, 0);
+			board.setAmount(y, x, playerFieldSide, amount+board.getAmount(y, x, playerFieldSide));
+		}
+		
+	}
+	
+
+	public int getSelX() {
+		return selX;
+	}
+
+	public void setSelX(int selX) {
+		this.selX = selX;
+	}
+
+	public int getSelY() {
+		return selY;
+	}
+
+	public void setSelY(int selY) {
+		this.selY = selY;
+	}
+	
+	public int getSelX2() {
+		return selX2;
+	}
+
+	public void setSelX2(int selX2) {
+		this.selX2 = selX2;
+	}
+
+	public int getSelY2() {
+		return selY2;
+	}
+
+	public void setSelY2(int selY2) {
+		this.selY2 = selY2;
+	}
+	
+	public int getFieldSide() {
+		return fieldSide;
+	}
+
+	public void setFieldSide(int fieldSide) {
+		this.fieldSide = fieldSide;
+	}
+	
+	public int getNextX() {
+		return nextX;
+	}
+	
+	public void setNextX(int nextX) {
+		this.nextX = nextX;
+	}
+
+	public int getNextY() {
+		return nextY;
+	}
+
+	public void setNextY(int nextY) {
+		this.nextY = nextY;
+	}
+
+	public int getNextX2() {
+		return nextX2;
+	}
+
+	public void setNextX2(int nextX2) {
+		this.nextX2 = nextX2;
+	}
+
+	public int getNextY2() {
+		return nextY2;
+	}
+
+	public void setNextY2(int nextY2) {
+		this.nextY2 = nextY2;
+	}
+	
+	public int getPlayerWon() {
+		return playerWon;
+	}
+
+	public void setPlayerWon(int playerWon) {
+		this.playerWon = playerWon;
+	}
+}

@@ -1,0 +1,32 @@
+package com.steinschen.main;
+
+import com.steinschen.main.Game.STATE;
+
+public class Spawner {
+	
+	private Handler handler;
+	private Game game;
+	private Board board;
+
+	boolean gameStarted=false;
+	
+	public Spawner(Game game, Handler handler, Board board) {
+		
+		this.handler = handler;
+		this.game = game;
+		this.board = board;
+	}
+	
+	
+	public void tick() {
+	
+		if(game.gameState==STATE.Restart) {
+			
+			board.clearBoard();
+			handler.clearAll();
+			handler.addObject(board);
+			
+			game.gameState=STATE.Game;
+		}
+	}
+}
