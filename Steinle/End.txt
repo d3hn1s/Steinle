@@ -3,6 +3,7 @@ package com.steinschen.main;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
 import com.steinschen.main.Game.STATE;
 
@@ -10,31 +11,25 @@ public class End {
 	
 	private Game game;
 	private Move move;
+	
+	private BufferedImage end;
 
 	public End(Game game, Move move) {
 		
 		this.game = game;
 		this.move = move;
+		
+		SpriteSheet ss = new SpriteSheet(Game.spriteSheet);
+		
+		end = ss.grabImage(74, 1, 1080, 700);
 	}
 	
 	
 	public void render(Graphics g) {
 		
-		Font fnt = new Font("arial", 1, 70);
-		Font fnt2 = new Font("arial", 1, 60);
-		Font fnt3 = new Font("arial", 1, 30);
-		
 		if(game.gameState==STATE.End) {
 			
-			g.setFont(fnt);
-			g.setColor(Color.black);
-			g.drawString("GAME OVER", 320, 250);
-			
-			g.setFont(fnt2);
-			g.drawString("Player " + move.getPlayerWon() + " won.", 340, 400);
-			
-			g.setFont(fnt3);
-			g.drawString("Press anywhere to restart.", 340, 550);
+			g.drawImage(end, 0, 0, null);
 		}
 	}
 }
