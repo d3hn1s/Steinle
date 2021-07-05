@@ -1,5 +1,31 @@
 package com.steinschen.main;
 
-public class Menu {
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
+import com.steinschen.main.Game.STATE;
+
+public class Menu {
+	
+	private Game game;
+	
+	private BufferedImage menu;
+
+	public Menu(Game game) {
+		
+		this.game = game;
+		
+		SpriteSheet ss = new SpriteSheet(Game.spriteSheet);
+		
+		menu = ss.grabImage(25, 1, 1080, 800);
+	}
+	
+	
+	public void render(Graphics g) {
+		
+		if(game.gameState==STATE.Menu) {
+			
+			g.drawImage(menu, 0, 0, null);
+		}
+	}
 }
