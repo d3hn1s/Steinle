@@ -1,5 +1,7 @@
 package com.steinschen.main;
 
+import java.util.Random;
+
 public class Enemy {
 
 	private Game game;
@@ -7,7 +9,11 @@ public class Enemy {
 	private Move move;
 	private Board board;
 	
-	private int difficulty;
+	private Random r = new Random();
+	
+	private int dif;
+	
+	private int rX, rY, rNx, rNy, rDir;
 	
 	private int takeOne=2;
 	private int takeTwo=4;
@@ -20,6 +26,7 @@ public class Enemy {
 	private int takeNine=512;
 	private int takeTen=1024;
 	private int takeMoreThanEleven=2048;
+	private int takeToWin=10000;
 	
 	private int[][] currentStones = new int[2][8];
 	private int[][] possibleMoves = new int[2][8];
@@ -40,6 +47,7 @@ public class Enemy {
 		for(int y=0; y<2; y++) {
 			for(int x=0; x<8; x++) {
 				if(currentStones[y][x]>=2) {
+					
 				}
 			}
 		}
@@ -47,16 +55,38 @@ public class Enemy {
 	
 	public void calculatBestMove() {
 		
+		if(dif==0) {
+			
+			do  {
+			rY = r.nextInt(2);
+			rX = r.nextInt(8);
+			rDir = r.nextInt(2);
+			if(rDir==0) rDir=-1;
+			
+			rNx=rX+rDir;
+			if(rNx==8) {
+				rNx=7;
+				if(rY==0) rNy=1;
+				if(rY==1) rNy=0;
+			}
+			if(rNx==-1) {
+				rNx=0;
+				if(rY==0) rNy=1;
+				if(rY==1) rNy=0;
+			}
+			
+			} while(!move.makeMove(2, 2, rX, rY, rNx, rNy, 2));
+		}
 		
 	}
 
 
 	
-	public int getDifficulty() {
-		return difficulty;
+	public int getDif() {
+		return dif;
 	}
 	
-	public void setDifficulty(int difficulty) {
-		this.difficulty = difficulty;
+	public void setDif(int dif) {
+		this.dif = dif;
 	}
 }
