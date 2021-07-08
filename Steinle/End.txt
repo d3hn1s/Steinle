@@ -2,26 +2,41 @@ package com.steinschen.main;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 import com.steinschen.main.Game.STATE;
 
 public class End {
 	
 	private Game game;
-	private Move move;
 	
 	private BufferedImage end;
+	
+	private Font sharonsHand;
+	
+	private int playerWon;
 
-	public End(Game game, Move move) {
+	public End(Game game) {
 		
 		this.game = game;
-		this.move = move;
 		
 		SpriteSheet ss = new SpriteSheet(Game.spriteSheet);
 		
 		end = ss.grabImage(74, 1, 1080, 700);
+		
+		try {
+			sharonsHand = Font.createFont(Font.TRUETYPE_FONT, new File("sharonshand.ttf")).deriveFont(170f);
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("sharonshand.ttf")));
+			
+		} catch(IOException | FontFormatException e) {
+			
+		}
 	}
 	
 	
@@ -30,6 +45,21 @@ public class End {
 		if(game.gameState==STATE.End) {
 			
 			g.drawImage(end, 0, 0, null);
+			
+			g.setColor(Color.black);
+			g.setFont(sharonsHand);
+			g.drawString(""+playerWon, 470, 362);
 		}
 	}
+
+
+	public int getPlayerWon() {
+		return playerWon;
+	}
+
+
+	public void setPlayerWon(int playerWon) {
+		this.playerWon = playerWon;
+	}
+	
 }
