@@ -6,8 +6,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
-import org.newdawn.slick.Music;
-
 public class Game extends Canvas implements Runnable{
 	
 	private static final long serialVersionUID = 8138777044569591830L;
@@ -27,9 +25,12 @@ public class Game extends Canvas implements Runnable{
 	private Settings settings;
 	private End end;
 	private Menu menu;
+	private EnemySelection es;
+	private Enemy enemy;
 	
 	public enum STATE {
 		Menu,
+		SelectEnemy,
 		Settings,
 		Game,
 		Muted,
@@ -38,7 +39,7 @@ public class Game extends Canvas implements Runnable{
 		End
 	};
 	
-	public STATE gameState = STATE.Settings;
+	public STATE gameState = STATE.Menu;
 	
 	public static BufferedImage spriteSheet;
 	
@@ -48,7 +49,6 @@ public class Game extends Canvas implements Runnable{
 		
 		try {
 			spriteSheet = loader.loadImage("/full_sprite_sheet_2.png");
-			System.out.println("Sprite Sheet loaded");
 		} catch (Exception e) {
 			
 			e.printStackTrace();
@@ -57,31 +57,26 @@ public class Game extends Canvas implements Runnable{
 		handler = new Handler();
 		ap = new AudioPlayer();
 		
-		menu = new Menu(this);
-		board=new Board(100, 100, ID.Board, handler);
-		spawner = new Spawner(this, handler, board);
-		move = new Move(this, board, handler, ap, mouseListener);
-		mouseListener = new MouseListener(this, move, handler, ap);
-		hud = new HUD(this, handler, ap, mouseListener);
-		this.addMouseListener(mouseListener);
-		end = new End(this, move);
+		end = new End(this);
+		menu = new Menu(this, ap);
+		es = new EnemySelection(this, ap);
 		settings = new Settings(this, ap);
+		hud = new HUD(handler, ap);
+		board=new Board(100, 100, ID.Board);
+		spawner = new Spawner(this, handler, board);
+		move = new Move(this, board, handler, ap, end);
+		enemy = new Enemy(move, board);
+		mouseListener = new MouseListener(this, move, handler, ap, settings, enemy);
+		this.addMouseListener(mouseListener);
+		
+		
 		
 		AudioPlayer.load();
 		
 		AudioPlayer.getMusic("music").loop();
 		
-		new Window(WIDTH, HEIGHT, "Das Spiel der Bongoneger", this);
+		new Window(WIDTH, HEIGHT, "Steinchenspiel -created by Dennis Schenbeck", this);
 		
-		
-		if(gameState==STATE.Game) {
-			handler.addObject(new Board(100, 100, ID.Board, handler));
-		}
-		
-		if(gameState==STATE.Restart) {
-			board.clearBoard();
-			handler.addObject(new Board(100, 100, ID.Board, handler));
-		}
 	}
 	
 	public synchronized void start() {
@@ -121,7 +116,7 @@ public class Game extends Canvas implements Runnable{
 			
 			if(System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
-				//System.out.println("FPS: " + frames);
+				System.out.println("FPS: " + frames);
 				frames = 0;
 			}
 		}
@@ -133,6 +128,8 @@ public class Game extends Canvas implements Runnable{
 		
 		if(gameState==STATE.Restart) {
 			spawner.tick();
+			enemy.setGameOver(false);
+			move.setPlayerWon(0);
 		}
 		
 		if(gameState==STATE.Settings) settings.tick();
@@ -155,6 +152,9 @@ public class Game extends Canvas implements Runnable{
 		if(gameState==STATE.Menu) {
 			menu.render(g);
 		}
+		if(gameState==STATE.SelectEnemy) {
+			es.render(g);
+		}
 		
 		if(gameState==STATE.Game) {
 			board.render(g);
@@ -162,7 +162,6 @@ public class Game extends Canvas implements Runnable{
 		}
 		
 		if(gameState==STATE.Settings) {
-			handler.clearBoard();
 			settings.render(g);
 		}
 		
