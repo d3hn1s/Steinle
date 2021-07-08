@@ -10,7 +10,7 @@ public class Move {
 	private Board board;
 	private Handler handler;
 	private AudioPlayer ap;
-	private MouseListener ml;
+	private End end;
 	
 	private int selX, selY;
 	private int selX2, selY2;
@@ -26,13 +26,13 @@ public class Move {
 
 	Graphics g;
 
-	public Move(Game game, Board board, Handler handler, AudioPlayer ap, MouseListener ml){
+	public Move(Game game, Board board, Handler handler, AudioPlayer ap, End end){
 	
 		this.game=game;
 		this.board=board;
 		this.handler=handler;
 		this.ap = ap;
-		this.ml = ml;
+		this.end = end;
 	}
 	
 	public boolean makeMove(int selFieldSide, int nextFieldSide, int selX, int selY, int nextX, int nextY, int currentPlayer) {
@@ -44,8 +44,6 @@ public class Move {
 		int playerFieldSide=0, enemyFieldSide=0;
 		int amountTook=0;
 		boolean moved=false;
-		
-		System.out.println(" | " + moves);
 		
 		if(checkMove(selFieldSide, nextFieldSide, selX, selY, nextX, nextY) && (currentPlayer==selFieldSide)) {
 			
@@ -62,11 +60,9 @@ public class Move {
 			
 			moves=board.getAmount(selY, selX, selFieldSide);
 			
-			System.out.println("Initial Moves:" +moves+ " | X:" +selX+ " Y:"+selY);
 			
 			while(moving) {
 				
-				System.out.println("LastX:" +lastX+ " SelY:"+selY);
 				board.setAmount(selY, lastX, selFieldSide, 0);
 				
 				for(int i=0; i<moves; i++) {
@@ -81,32 +77,16 @@ public class Move {
 					lastX=nextX;
 					nextX++;
 					
-					System.out.println("");
-					System.out.println("Dir: "+direction);
-					
 					if(firstMove) {
 						lastX=selX+(1*direction);
 						nextX=lastX+(1*direction);
 						firstMove=false;
-						System.out.println("FirstMove");
 					}
 					else{
 						nextX=lastX+(1*direction);
 					}
 					
-					System.out.println("");
-					
-					System.out.print("LastX: "+lastX);
-					System.out.println(" | LastY: "+lastY);
-					
-					System.out.print("NextX: "+nextX);
-					System.out.println(" | NextY: "+nextY);
-					
-					System.out.print("SelX: "+selX);
-					System.out.println(" | SelY: "+selY);
-					
 					if((lastX==-1 && nextX==-2 && selX==0 && lastY==0 && nextY==0 && selY==0) || (lastX==1 && nextX==2 && selX==0 && lastY==0 && nextY==1 && selY==0)) {							//UP LEFT
-						System.out.println("				Case: " + 1);
 						nextX=1;
 						nextY=1;
 						lastX=0;
@@ -115,7 +95,6 @@ public class Move {
 						direction=1;
 					}
 					else if((lastX==-1 && nextX==-2 && selX==-1 && lastY==1 && nextY==1 && selY==1) || (lastX==1 && nextX==2 && selX==0 && lastY==1 && nextY==0 && selY==1)) {				//DOWN LEFT
-						System.out.println("				Case: " + 2);
 						nextX=1;
 						nextY=0;
 						lastX=0;
@@ -124,7 +103,6 @@ public class Move {
 						direction=1;						
 					}
 					else if((lastX==8 && nextX==9 && selX==6 && lastY==0 && nextY==0 && selY==0) || (lastX==8 && nextX==9 && selX==7 && lastY==0 && nextY==1 && selY==0)) {						//UP RIGHT
-						System.out.println("				Case: " + 3);
 						nextX=6;
 						nextY=1;
 						lastX=7;
@@ -132,7 +110,6 @@ public class Move {
 						direction=-1;
 					}
 					else if((lastX==8 && nextX==9 && selX==6 && lastY==1 && nextY==1 && selY==1) || (lastX==8 && nextX==9 && selX==7 && lastY==1 && nextY==0 && selY==1)) {			//DOWN RIGHT
-						System.out.println("				Case: " + 4);
 						nextX=6;
 						nextY=0;
 						lastX=7;
@@ -141,9 +118,11 @@ public class Move {
 					}
 					
 					board.setAmount(selY, lastX, selFieldSide, board.getAmount(selY, lastX, selFieldSide)+1);
-					
-					System.out.println("									LastX:" + lastX + " | SelY:" + selY);
-					System.out.println("");
+					try {
+						Thread.sleep(125);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 					
 					selX=lastX-1;
 					lastY=selY;
@@ -152,39 +131,13 @@ public class Move {
 					if(selX==-1 && selY==0) {
 						selX=0;
 					}
-					
-					
-					System.out.print("LastX: "+lastX);
-					System.out.println(" | LastY: "+lastY);
-					
-					System.out.print("NextX: "+nextX);
-					System.out.println(" | NextY: "+nextY);
-					
-					System.out.print("SelX: "+selX);
-					System.out.println(" | SelY: "+selY);
-					
 					handler.clearAll();
-					
-					
 				}
-				
-				System.out.println("SelX:" +selX+ " SelY:" +selY);
-				
 				
 				amountTook=board.getAmount(selY, lastX, selFieldSide);
 				takeFromEnemy(playerFieldSide, enemyFieldSide, lastX, selY);
 				amountTook=(board.getAmount(selY, lastX, selFieldSide)-amountTook);
 				moves=board.getAmount(selY, lastX, selFieldSide);
-				
-				System.out.println("");
-				System.out.println("																						Amount Took:" + amountTook);
-				System.out.println("");
-				System.out.println("Move succesful");
-				System.out.println("");
-				System.out.println("Moves: " + moves);
-				System.out.println("");
-				System.out.println("-----------------------------------------------------------------------------------------------------");
-				System.out.println("");
 				
 				if(moves<2) {
 					moving=false;
@@ -192,9 +145,22 @@ public class Move {
 					if(currentPlayer==1)handler.setCurrentPlayer(enemyFieldSide);
 				}
 				
-				if(board.checkForLoss(enemyFieldSide)) {
+				if(board.checkForNoMovePossible(playerFieldSide)) {
+					playerWon=enemyFieldSide;
+					end.setPlayerWon(playerWon);
 					game.gameState = STATE.End;
+				}
+				
+				if(board.checkForNoMovePossible(enemyFieldSide)) {
 					playerWon=playerFieldSide;
+					end.setPlayerWon(playerWon);
+					game.gameState = STATE.End;
+				}
+				
+				if(board.checkForLoss(enemyFieldSide)) {
+					playerWon=playerFieldSide;
+					end.setPlayerWon(playerWon);
+					game.gameState = STATE.End;
 				}
 				
 				moved=true;
@@ -223,9 +189,6 @@ public class Move {
 			}
 			
 		}
-		
-		
-		System.out.println(" | " + moveLegal);
 		return moveLegal;
 	}
 	
@@ -241,7 +204,6 @@ public class Move {
 			board.setAmount(y, x, enemyFieldSide, 0);
 			board.setAmount(y, x, playerFieldSide, amount+board.getAmount(y, x, playerFieldSide));
 		}
-		
 	}
 	
 
@@ -323,5 +285,7 @@ public class Move {
 
 	public void setPlayerWon(int playerWon) {
 		this.playerWon = playerWon;
+		end.setPlayerWon(playerWon);
+		if(playerWon<0) game.gameState=STATE.End;
 	}
 }
