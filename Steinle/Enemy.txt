@@ -4,83 +4,52 @@ import java.util.Random;
 
 public class Enemy {
 
-	private Game game;
-	private Handler handler;
 	private Move move;
 	private Board board;
 	
 	private Random r = new Random();
 	
+	private boolean playerMoved, gameOver;
+	
 	private int dif;
 	
 	private int rX, rY, rNx, rNy, rDir;
 	
-	private int takeOne=2;
-	private int takeTwo=4;
-	private int takeThree=8;
-	private int takeFour=16;
-	private int takeFive=32;
-	private int takeSix=64;
-	private int takeSeven=128;
-	private int takeEight=256;
-	private int takeNine=512;
-	private int takeTen=1024;
-	private int takeMoreThanEleven=2048;
-	private int takeToWin=10000;
-	
-	private int[][] currentStones = new int[2][8];
-	private int[][] possibleMoves = new int[2][8];
-	
-	public Enemy(Game game, Handler handler, Move move, Board board, ID id) {
+	public Enemy(Move move, Board board) {
 		
-		this.game = game;
-		this.handler = handler;
 		this.move = move;
 		this.board = board;
 	}
 	
-	
-	public void calculateMoves() {
+	public void calculateBestMove() {
 		
-		currentStones=board.getField2();
-		
-		for(int y=0; y<2; y++) {
-			for(int x=0; x<8; x++) {
-				if(currentStones[y][x]>=2) {
-					
+		if (!gameOver) {
+			if(dif==0) {
+				
+				do  {
+				rY = r.nextInt(2);
+				rX = r.nextInt(8);
+				rDir = r.nextInt(2);
+				if(rDir==0) rDir=-1;
+				
+				rNx=rX+rDir;
+				if(rNx==8) {
+					rNx=7;
+					if(rY==0) rNy=1;
+					if(rY==1) rNy=0;
 				}
+				if(rNx==-1) {
+					rNx=0;
+					if(rY==0) rNy=1;
+					if(rY==1) rNy=0;
+				}
+				
+				} while(!move.makeMove(2, 2, rX, rY, rNx, rNy, 2) && !board.checkForLoss(2) && !board.checkForNoMovePossible(2));
 			}
 		}
-	}
-	
-	public void calculatBestMove() {
-		
-		if(dif==0) {
-			
-			do  {
-			rY = r.nextInt(2);
-			rX = r.nextInt(8);
-			rDir = r.nextInt(2);
-			if(rDir==0) rDir=-1;
-			
-			rNx=rX+rDir;
-			if(rNx==8) {
-				rNx=7;
-				if(rY==0) rNy=1;
-				if(rY==1) rNy=0;
-			}
-			if(rNx==-1) {
-				rNx=0;
-				if(rY==0) rNy=1;
-				if(rY==1) rNy=0;
-			}
-			
-			} while(!move.makeMove(2, 2, rX, rY, rNx, rNy, 2));
-		}
+		 
 		
 	}
-
-
 	
 	public int getDif() {
 		return dif;
@@ -88,5 +57,21 @@ public class Enemy {
 	
 	public void setDif(int dif) {
 		this.dif = dif;
+	}
+
+	public boolean getPlayerMoved() {
+		return playerMoved;
+	}
+
+	public void setAiTurn(boolean playerMoved) {
+		this.playerMoved = playerMoved;
+	}
+	
+	public boolean getGameOver() {
+		return gameOver;
+	}
+
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
 	}
 }
