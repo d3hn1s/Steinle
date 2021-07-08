@@ -10,9 +10,7 @@ import java.io.IOException;
 
 public class HUD {
 	
-	private Game game;
 	private AudioPlayer ap;
-	private MouseListener ml;
 	private Handler handler;
 	
 	private BufferedImage restartIcon;
@@ -24,21 +22,19 @@ public class HUD {
 	
 	Font sharonsHand;
 
-	public HUD(Game game, Handler handler, AudioPlayer ap, MouseListener ml) {
+	public HUD(Handler handler, AudioPlayer ap) {
 		
-		this.game = game;
 		this.ap = ap;
-		this.ml = ml;
 		this.handler = handler;
 		
 		SpriteSheet ss = new SpriteSheet(Game.spriteSheet);
 		
+		settingsIcon = ss.grabImage(2, 2, 32, 32);
 		restartIcon = ss.grabImage(1, 1, 32, 32);
 		soundUnmuteIcon = ss.grabImage(1, 2, 32, 32);
 		soundMuteIcon = ss.grabImage(1, 3, 32, 32);
 		musicUnmuteIcon = ss.grabImage(1, 4, 32, 32);
 		musicMuteIcon = ss.grabImage(2, 1, 32, 32);
-		settingsIcon = ss.grabImage(2, 2, 32, 32);
 		
 		try {
 			sharonsHand = Font.createFont(Font.TRUETYPE_FONT, new File("sharonshand.ttf")).deriveFont(50f);
@@ -55,8 +51,8 @@ public class HUD {
 	public void render(Graphics g) {
 		
 		g.setFont(sharonsHand);
-		g.drawString("Player " + handler.getCurrentPlayer() + " is making a Move", 320, 53);
-		
+		g.drawString("Player " + handler.getCurrentPlayer() + " is making a Move", 300, 53);
+
 		g.drawImage(settingsIcon, 30, 30, null);
 		g.drawImage(restartIcon, 90, 30, null);
 		
